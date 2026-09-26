@@ -12,15 +12,14 @@
 <link rel="icon" type="image/png" href="imagens/logo-escudo.png">
 <link rel="preload" href="fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
 
 <div class="intro" aria-hidden="true">
-  <img src="imagens/logo-escudo.png" alt="">
-  <div class="t"><span>D.A.G.R. Company</span></div>
-  <div class="bar"></div>
-  <div class="m">Death walks beside us</div>
-  <div class="skip">Click to skip</div>
+  <video class="intro-video" muted playsinline preload="auto" poster="video/intro-poster.webp"></video>
+  <div class="intro-bar"><span></span></div>
+  <button class="intro-skip" type="button">Skip intro ›</button>
 </div>
 <div class="flag"></div>
 <header class="site-header">

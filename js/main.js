@@ -6,7 +6,7 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- animação de abertura (só na home, uma vez por sessão) ---------- */
+  /* ---------- vídeo de abertura (só na home, uma vez por sessão) ---------- */
   var intro = document.querySelector(".intro");
   if (intro) {
     var seen = false;
@@ -14,7 +14,10 @@
     if (seen || reduceMotion) {
       intro.remove();
     } else {
+      var video = intro.querySelector("video");
+      var bar = intro.querySelector(".intro-bar span");
       document.body.style.overflow = "hidden";
+
       var closeIntro = function () {
         if (intro.classList.contains("done")) return;
         intro.classList.add("done");
@@ -22,9 +25,29 @@
         try { sessionStorage.setItem("dagr-intro", "1"); } catch (e) {}
         setTimeout(function () { intro.remove(); }, 800);
       };
-      intro.addEventListener("click", closeIntro);
-      document.addEventListener("keydown", closeIntro, { once: true });
-      setTimeout(closeIntro, 3400);
+
+      // escolhe a versão do vídeo conforme o ecrã e o formato suportado (MP4/H.264, senão WebM/VP9)
+      var size = window.innerWidth <= 900 ? "720" : "1080";
+      var ext = video.canPlayType('video/mp4; codecs="avc1.640028"') ? "mp4" : "webm";
+      video.src = "video/intro-" + size + "." + ext;
+      video.addEventListener("timeupdate", function () {
+        if (video.duration) bar.style.transform = "scaleX(" + (video.currentTime / video.duration) + ")";
+      });
+      video.addEventListener("ended", closeIntro);
+      video.addEventListener("error", closeIntro);
+
+      var playing = video.play();
+      if (playing && playing.catch) {
+        // autoplay bloqueado (ex: modo poupança de energia): mostra o poster um instante e segue
+        playing.catch(function () { setTimeout(closeIntro, 1200); });
+      }
+
+      intro.querySelector(".intro-skip").addEventListener("click", closeIntro);
+      intro.addEventListener("click", function (e) { if (e.target === video) closeIntro(); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" || e.key === "Enter" || e.key === " ") closeIntro();
+      });
+      setTimeout(closeIntro, 12000); // segurança caso o vídeo encrave
     }
   }
 

@@ -19,6 +19,7 @@ HTML + CSS + JS puros, sem build — basta abrir `index.html` no navegador.
 - `css/style.css` — todo o estilo e animações (cores no topo, em `:root`)
 - `js/main.js` — menu móvel, abertura, animações de scroll, filtro de vagas, galeria
 - `fonts/` — Anton + IBM Plex Mono (locais, licença OFL)
+- `video/` — vídeo de abertura "Death walks beside us" (MP4 + WebM, 1080p e 720p para telemóvel). Toca uma vez por sessão na Home.
 - `imagens/` — fotos originais; `imagens/cortes/` — fotos recortadas dos cartazes sem texto
 - `wireframe/` — protótipo aprovado (referência)
 
