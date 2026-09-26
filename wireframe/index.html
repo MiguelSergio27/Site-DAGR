@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAGR — Wireframe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f2efe6;
+    --ink: #141412;
+    --mute: #6b6a64;
+    --line: #c9c5b8;
+    --ph: #dcd8cc;       /* placeholder de imagem */
+    --ph-dark: #3a3a36;  /* placeholder de imagem escura */
+    --blue: #1f4f95;
+    --yellow: #e8c21e;
+    --note: #1f4f95;
+    --display: "Anton", "Impact", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #e6e2d6; color: var(--ink); font: 15px/1.55 var(--mono); }
+
+  /* ---------- barra de legenda do wireframe (não faz parte do site) ---------- */
+  .legend { position: sticky; top: 0; z-index: 20; background: var(--ink); color: var(--paper); font-size: 12px; letter-spacing: .08em; }
+  .legend-in { max-width: 1240px; margin: 0 auto; padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center; }
+  .legend b { color: var(--yellow); }
+  .legend .k { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 12px; height: 12px; display: inline-block; border: 1px solid #fff3; }
+
+  /* ---------- página ---------- */
+  .page { max-width: 1240px; margin: 24px auto 80px; background: var(--paper); box-shadow: 0 1px 0 var(--line), 0 20px 60px #0002; }
+  .flag { height: 8px; background: linear-gradient(90deg, var(--blue) 50%, var(--yellow) 50%); }
+
+  section, header.nav, footer.foot { position: relative; border-bottom: 1px dashed var(--line); }
+  .wrap { padding: 56px 48px; }
+  .tag { position: absolute; top: 0; left: 0; background: var(--ink); color: var(--paper); font-size: 11px; letter-spacing: .12em; padding: 4px 10px; z-index: 2; }
+  .note { font-size: 12px; color: var(--note); border-left: 3px solid var(--note); padding: 4px 0 4px 10px; margin: 18px 0 0; max-width: 62ch; background: #1f4f950a; }
+  .note::before { content: "NOTA · "; font-weight: 700; }
+
+  .eyebrow { font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--blue); font-weight: 700; margin: 0 0 10px; }
+  .eyebrow.y { color: #9a7d00; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 400; text-transform: uppercase; line-height: .92; margin: 0; letter-spacing: .005em; }
+  h1 { font-size: clamp(56px, 11vw, 132px); }
+  h2 { font-size: clamp(40px, 6.5vw, 76px); }
+  h3 { font-size: 28px; }
+  .y { color: #b8980a; }
+  .lead { max-width: 60ch; color: #33322e; margin: 18px 0 0; }
+  .muted { color: var(--mute); }
+  .caps { text-transform: uppercase; letter-spacing: .14em; font-size: 12px; }
+
+  .ph { background: var(--ph); border: 1px solid var(--line); position: relative; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--mute); font-size: 11px; letter-spacing: .06em; padding: 10px; min-height: 120px;
+        background-image: linear-gradient(45deg, transparent 49.5%, #0000000f 49.5% 50.5%, transparent 50.5%), linear-gradient(-45deg, transparent 49.5%, #0000000f 49.5% 50.5%, transparent 50.5%); }
+  .ph.dark { background-color: var(--ph-dark); color: #bdb9ad; border-color: #222; }
+  .ph span { background: var(--paper); color: var(--ink); padding: 3px 7px; border: 1px solid var(--line); }
+  .ph.dark span { background: #1d1d1b; color: #d9d5c9; border-color: #444; }
+
+  .btn { display: inline-block; font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; padding: 14px 22px; border: 2px solid var(--ink); text-decoration: none; color: var(--ink); }
+  .btn.pri { background: var(--yellow); border-color: var(--yellow); }
+  .btn.ghost { background: transparent; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+  .grid { display: grid; gap: 20px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g5 { grid-template-columns: repeat(5, 1fr); }
+  .card { border: 1px solid var(--line); border-top: 3px solid var(--blue); padding: 18px; background: #fbfaf5; }
+  .card.y { border-top-color: var(--yellow); }
+  .kv { display: flex; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding: 8px 0; font-size: 13px; }
+  .open { color: #8a6f00; font-weight: 700; }
+  .full { color: var(--mute); font-weight: 700; }
+
+  /* NAV */
+  .nav .wrap { padding: 18px 48px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2em; }
+  .logo-ph { width: 44px; height: 54px; background: var(--yellow); clip-path: polygon(0 0,100% 0,100% 62%,50% 100%,0 62%); display: flex; align-items: center; justify-content: center; font-size: 8px; color: var(--ink); }
+  .links { display: flex; gap: 18px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; flex-wrap: wrap; }
+  .links a { color: var(--ink); text-decoration: none; }
+  .burger { display: none; border: 2px solid var(--ink); padding: 6px 10px; font-size: 12px; }
+
+  /* HERO */
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; min-height: 560px; }
+  .hero .ph { min-height: 560px; border: 0; }
+  .hero .txt { padding: 72px 48px 48px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .strip { background: var(--yellow); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 16px 48px; font-weight: 700; letter-spacing: .18em; font-size: 13px; text-transform: uppercase; }
+
+  /* STATS */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat { padding: 26px 24px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: 0; }
+  .stat .n { font-family: var(--display); font-size: 48px; line-height: 1; }
+
+  /* ABOUT */
+  .about { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .founder { display: grid; grid-template-columns: 140px 1fr; gap: 18px; margin-top: 28px; border: 1px solid var(--line); border-left: 6px solid var(--yellow); padding: 18px; background: #fbfaf5; }
+  .founder .ph { min-height: 160px; }
+  blockquote { margin: 12px 0 0; font-family: var(--display); font-size: 26px; line-height: 1.05; text-transform: uppercase; }
+
+  /* COMMAND */
+  .cmd h3 { font-size: 34px; }
+
+  /* TEAMS */
+  .team { display: grid; grid-template-columns: 1fr; border: 1px solid var(--line); background: #fbfaf5; }
+  .team .ph { min-height: 170px; border: 0; border-bottom: 1px solid var(--line); }
+  .team .body { padding: 18px; }
+  .team .motto { font-family: var(--display); text-transform: uppercase; font-size: 20px; line-height: 1.05; margin: 10px 0 12px; }
+
+  /* PATH */
+  .step { text-align: center; border: 1px solid var(--line); border-top: 3px solid var(--blue); padding: 20px 12px; background: #fbfaf5; }
+  .step .ico { color: var(--blue); font-size: 22px; }
+  .step b { display: block; letter-spacing: .16em; margin: 8px 0 4px; }
+  .arrow { text-align: center; color: var(--mute); font-size: 12px; margin-top: 12px; letter-spacing: .1em; }
+
+  /* STANDARDS */
+  .rule { display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 16px 0; border-top: 1px solid var(--line); }
+  .rule .num { font-family: var(--display); font-size: 40px; color: var(--blue); line-height: 1; }
+  .rule b { letter-spacing: .14em; text-transform: uppercase; font-size: 14px; }
+  .rule p { margin: 4px 0 0; color: #45443f; font-size: 14px; }
+  .banner { margin-top: 32px; border-top: 3px solid var(--ink); padding-top: 18px; text-align: center; font-family: var(--display); font-size: clamp(32px, 5vw, 56px); text-transform: uppercase; }
+
+  /* RECRUIT */
+  .recruit-hero { display: grid; grid-template-columns: 1fr 1fr; background: #1b1b19; color: var(--paper); }
+  .recruit-hero .txt { padding: 56px 48px; }
+  .recruit-hero .ph { min-height: 480px; border: 0; }
+  .recruit-hero .eyebrow { color: var(--yellow); }
+  .recruit-hero .lead { color: #d8d4c8; }
+  .recruit-hero .btn.ghost { color: var(--paper); border-color: var(--paper); }
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 24px; }
+  .tbl th, .tbl td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .tbl th { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); border-bottom: 2px solid var(--ink); }
+  .tbl td:first-child { font-family: var(--display); font-size: 22px; text-transform: uppercase; white-space: nowrap; }
+  .num3 .n { font-family: var(--display); font-size: 44px; color: #b8980a; line-height: 1; }
+  .num3 > div { border-top: 3px solid var(--yellow); padding-top: 10px; }
+  .req { background: var(--ink); color: var(--paper); padding: 14px 18px; letter-spacing: .16em; font-size: 12px; text-transform: uppercase; margin-top: 28px; text-align: center; }
+  .cta-box { margin-top: 28px; background: var(--yellow); padding: 24px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+  .cta-box .big { font-size: clamp(20px, 3vw, 32px); font-weight: 700; word-break: break-all; }
+  .qr { width: 120px; height: 120px; background: #fff; border: 1px solid var(--ink); display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; }
+
+  /* GALLERY */
+  .gal { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 150px; gap: 10px; }
+  .gal .ph { min-height: 0; }
+  .gal .w2 { grid-column: span 2; }
+  .gal .h2 { grid-row: span 2; }
+
+  /* FOOTER */
+  .foot { background: var(--ink); color: var(--paper); }
+  .foot .wrap { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  .foot a { color: var(--paper); }
+  .foot .motto { font-family: var(--display); font-size: 36px; text-transform: uppercase; line-height: 1; }
+
+  /* RESPONSIVO */
+  @media (max-width: 900px) {
+    .wrap, .nav .wrap, .strip { padding-left: 16px; padding-right: 16px; }
+    .wrap { padding-top: 48px; padding-bottom: 40px; }
+    .links { display: none; } .burger { display: inline-block; }
+    .hero, .recruit-hero, .about { grid-template-columns: 1fr; }
+    .hero .ph { min-height: 280px; order: -1; } .recruit-hero .ph { min-height: 240px; }
+    .hero .txt, .recruit-hero .txt { padding: 32px 16px; }
+    .g3, .g4, .g5, .g2 { grid-template-columns: 1fr 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; } .stat:nth-child(2) { border-right: 0; } .stat { border-bottom: 1px solid var(--line); }
+    .gal { grid-template-columns: 1fr 1fr; }
+    .foot .wrap { grid-template-columns: 1fr; }
+    .tbl thead { display: none; } .tbl tr { display: block; border-bottom: 2px solid var(--ink); padding: 8px 0; } .tbl td { display: block; border: 0; padding: 4px 0; }
+  }
+  @media (max-width: 520px) {
+    .g3, .g4, .g5, .g2 { grid-template-columns: 1fr; }
+    .founder { grid-template-columns: 1fr; }
+    .cta-box { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="legend"><div class="legend-in">
+  <span><b>WIREFRAME + COPY</b> · D.A.G.R. COMPANY · v1</span>
+  <span class="k"><i class="sw" style="background:var(--ph)"></i>imagem (nome do ficheiro)</span>
+  <span class="k"><i class="sw" style="background:var(--yellow)"></i>destaque amarelo</span>
+  <span class="k"><i class="sw" style="background:var(--blue)"></i>destaque azul</span>
+  <span class="k" style="color:#9fb7e0">NOTA · comentários para ti (não aparecem no site)</span>
+</div></div>
+
+<div class="page">
+<div class="flag"></div>
+
+<!-- ============ 00 NAV ============ -->
+<header class="nav">
+  <span class="tag">00 · NAVEGAÇÃO (fixa no topo)</span>
+  <div class="wrap">
+    <div class="brand"><div class="logo-ph">LOGO</div> D.A.G.R. CO.</div>
+    <nav class="links">
+      <a href="#about">About</a><a href="#teams">Teams</a><a href="#path">The Path</a><a href="#standards">Standards</a><a href="#recruit">Recruitment</a><a href="#gallery">Gallery</a>
+    </nav>
+    <a class="btn pri" href="#recruit" style="padding:10px 16px">Join</a>
+    <span class="burger">☰ MENU</span>
+  </div>
+</header>
+
+<!-- ============ 01 HERO ============ -->
+<section id="top">
+  <span class="tag">01 · HERO</span>
+  <div class="hero">
+    <div class="txt">
+      <p class="eyebrow y">// Direct Assault Ground Ranger Company</p>
+      <h1>D.A.G.R.<br><span class="y">Company</span></h1>
+      <p class="caps" style="margin-top:18px">Death walks beside us &nbsp;//&nbsp; Arma Reforger</p>
+      <p class="lead">A milsim company built on real structure, real training and a team you can count on. Four teams, one fight.</p>
+      <div class="row">
+        <a class="btn pri" href="#recruit">Apply now</a>
+        <a class="btn ghost" href="#teams">Meet the teams</a>
+      </div>
+      <p class="note">Fundo escuro no site final. Aqui pode entrar a animação de abertura (vídeo em loop, sem som) se me enviares os .mp4; senão usa a foto.</p>
+    </div>
+    <div class="ph dark"><span>hero-dagr-company.webp · ou vídeo de abertura</span></div>
+  </div>
+  <div class="strip"><span>Arma Reforger</span><span>All experience levels welcome</span><span>NA · EU · and more</span></div>
+</section>
+
+<!-- ============ 02 NÚMEROS ============ -->
+<section>
+  <span class="tag">02 · NÚMEROS RÁPIDOS</span>
+  <div class="stats" style="padding-top:22px">
+    <div class="stat"><div class="n">4</div><div class="caps muted">Teams</div></div>
+    <div class="stat"><div class="n">18+</div><div class="caps muted">Mic required</div></div>
+    <div class="stat"><div class="n">2–3</div><div class="caps muted">Days a week</div></div>
+    <div class="stat"><div class="n">PC</div><div class="caps muted">Preferred · console OK</div></div>
+  </div>
+</section>
+
+<!-- ============ 03 ABOUT + FUNDADOR ============ -->
+<section id="about">
+  <span class="tag">03 · SOBRE O GRUPO + FUNDADOR</span>
+  <div class="wrap about">
+    <div>
+      <p class="eyebrow">// Who we are</p>
+      <h2>One company.<br><span class="y">Many fronts.</span></h2>
+      <p class="lead">D.A.G.R. — Direct Assault Ground Ranger Company — is an Arma Reforger milsim unit. We fight on multiple fronts and run training events on our own private server, with members across NA, EU and beyond.</p>
+      <p class="lead">Assault, recon, support and medical all rotate together. Everyone has a role, everyone knows the chain, and nobody fights alone.</p>
+
+      <div class="founder">
+        <div class="ph"><span>foto do Sweep</span></div>
+        <div>
+          <p class="eyebrow" style="margin:0">// Founder &amp; Commander</p>
+          <h3>SWEEP</h3>
+          <p class="muted" style="margin:8px 0 0;font-size:14px">Founded D.A.G.R. to build [the unit he always wanted to play in — história curta a completar]. Leads the company and the VANGUARD squad of HITMAN.</p>
+          <blockquote>“Respect is not optional.”</blockquote>
+        </div>
+      </div>
+      <p class="note">Preciso de ti: quando/porquê o Sweep fundou o grupo (2–3 frases), uma foto dele em jogo e uma citação que ele queira usar. O texto entre [ ] é temporário.</p>
+    </div>
+    <div class="grid" style="gap:10px">
+      <div class="ph" style="min-height:300px"><span>foto-grupo-donetsk.webp</span></div>
+      <div class="grid g2" style="gap:10px">
+        <div class="ph"><span>bunker-escudo.webp</span></div>
+        <div class="ph"><span>equipa-emblema.webp</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 COMANDO ============ -->
+<section>
+  <span class="tag">04 · COMANDO / A QUEM PERGUNTAR</span>
+  <div class="wrap">
+    <p class="eyebrow">// Command</p>
+    <h2>Who to ask</h2>
+    <div class="grid g4 cmd" style="margin-top:28px">
+      <div class="card y"><h3>Sweep</h3><p class="caps muted">Commander / Founder</p></div>
+      <div class="card"><h3>Storm241</h3><p class="caps muted">Operators Manager</p></div>
+      <div class="card"><h3>Growbigger</h3><p class="caps muted">Lead Cadre</p></div>
+      <div class="card"><h3>Dexter</h3><p class="caps muted">Prophet + Disciple</p></div>
+    </div>
+    <p style="margin-top:20px;font-weight:700">Problem? Tell your team leader, or contact GROWBIGGER or SWEEP.</p>
+  </div>
+</section>
+
+<!-- ============ 05 EQUIPAS ============ -->
+<section id="teams">
+  <span class="tag">05 · AS EQUIPAS</span>
+  <div class="wrap">
+    <p class="eyebrow">// The teams</p>
+    <h2>Four teams.<br><span class="y">One company.</span></h2>
+    <div class="grid g4" style="margin-top:32px">
+      <article class="team">
+        <div class="ph"><span>assalto (sso-assault-hitman)</span></div>
+        <div class="body">
+          <p class="caps muted" style="margin:0">SSO Assault Force</p>
+          <h3>Hitman</h3>
+          <p class="motto">First through the door.</p>
+          <p class="muted" style="font-size:13px;margin:0">Three squads — VANGUARD, BANDIT, COBRA — two fireteams each.</p>
+        </div>
+      </article>
+      <article class="team">
+        <div class="ph dark"><span>noite (sso-recon-whiplash)</span></div>
+        <div class="body">
+          <p class="caps muted" style="margin:0">SSO Recon // Sabotage</p>
+          <h3>Whiplash</h3>
+          <p class="motto">Small team. Big responsibilities.</p>
+          <p class="muted" style="font-size:13px;margin:0">About six operators. Selected by STORM241.</p>
+        </div>
+      </article>
+      <article class="team">
+        <div class="ph"><span>tanque (anvil-vehicle-crew)</span></div>
+        <div class="body">
+          <p class="caps muted" style="margin:0">Support &amp; Logistics</p>
+          <h3>Anvil</h3>
+          <p class="motto">Drive it. Gun it. Crew it.</p>
+          <p class="muted" style="font-size:13px;margin:0">Vehicles, firepower (artillery, drones) and logistics.</p>
+        </div>
+      </article>
+      <article class="team">
+        <div class="ph"><span>médico (prophet-disciple)</span></div>
+        <div class="body">
+          <p class="caps muted" style="margin:0">Medical + CSAR</p>
+          <h3>Prophet + Disciple</h3>
+          <p class="motto">Keep them in the fight. Bring them home.</p>
+          <p class="muted" style="font-size:13px;margin:0">Medical platoon plus combat search &amp; rescue. Co-led by DEXTER.</p>
+        </div>
+      </article>
+    </div>
+    <p class="note">Cada cartão abre/leva à tabela de vagas da equipa na secção Recrutamento. As fotos dos cartazes vão ser recortadas sem o texto por cima.</p>
+  </div>
+</section>
+
+<!-- ============ 06 O CAMINHO ============ -->
+<section id="path">
+  <span class="tag">06 · PROGRESSÃO (THE PATH)</span>
+  <div class="wrap">
+    <p class="eyebrow">// The path</p>
+    <h2>Earn your tier</h2>
+    <p class="lead">Nobody is handed a spot. Promotions are earned through action.</p>
+    <div class="grid g5" style="margin-top:28px">
+      <div class="step"><div class="ico">▶</div><b>ASPIRANT</b><span class="muted" style="font-size:13px">1–3 weeks, 2 sponsors</span></div>
+      <div class="step"><div class="ico">○</div><b>FNG</b><span class="muted" style="font-size:13px">Learning how we roll</span></div>
+      <div class="step"><div class="ico">◇</div><b>REGULAR</b><span class="muted" style="font-size:13px">Trusted in your role</span></div>
+      <div class="step"><div class="ico">◆</div><b>VETERAN</b><span class="muted" style="font-size:13px">Proven over time</span></div>
+      <div class="step"><div class="ico">★</div><b>LEADER</b><span class="muted" style="font-size:13px">Leads a team or element</span></div>
+    </div>
+    <p class="arrow">ASPIRANT → FNG → REGULAR → VETERAN → LEADER</p>
+  </div>
+</section>
+
+<!-- ============ 07 REGRAS ============ -->
+<section id="standards">
+  <span class="tag">07 · STANDARDS &amp; CODE OF CONDUCT</span>
+  <div class="wrap">
+    <p class="eyebrow">// Member handbook</p>
+    <h2>Standards &amp; conduct</h2>
+    <div class="grid g2" style="margin-top:28px;gap:40px">
+      <div>
+        <p class="eyebrow">// Standards</p>
+        <div class="rule"><span class="num">01</span><div><b>Know your role</b><p>Declare a primary and a secondary. Become proficient with both.</p></div></div>
+        <div class="rule"><span class="num">02</span><div><b>Follow the chain</b><p>Orders come from your team leader. Leaders answer to Command.</p></div></div>
+        <div class="rule"><span class="num">03</span><div><b>Keep comms clean</b><p>Short, clear, on the net. Say what matters and get off.</p></div></div>
+        <div class="rule"><span class="num">04</span><div><b>Show up ready</b><p>Aim for 2 to 3 days a week. Share your availability and timezone.</p></div></div>
+        <div class="rule"><span class="num">05</span><div><b>One company</b><p>Your team serves the fight. Remember the mission.</p></div></div>
+        <div class="rule"><span class="num">06</span><div><b>Earn your tier</b><p>FNG, Regular, Veteran, Leader. Promotions are earned through action.</p></div></div>
+      </div>
+      <div>
+        <p class="eyebrow">// Code of conduct</p>
+        <div class="rule"><span class="num">01</span><div><b>Respect everyone</b><p>No harassment, hate or slurs. Disagree without the drama.</p></div></div>
+        <div class="rule"><span class="num">02</span><div><b>Play clean</b><p>No cheats, exploits or griefing. Ever.</p></div></div>
+        <div class="rule"><span class="num">03</span><div><b>Mission first on comms</b><p>Keep the net clear. Save banter for downtime.</p></div></div>
+        <div class="rule"><span class="num">04</span><div><b>Take issues to leaders</b><p>Tell your team leader. About a leader? Contact GROWBIGGER or SWEEP.</p></div></div>
+        <div class="rule"><span class="num">05</span><div><b>Be honest</b><p>Give real availability and real quals. Own your mistakes.</p></div></div>
+        <div class="rule"><span class="num">06</span><div><b>Help the new guys</b><p>Everyone was an FNG once. Teach, do not gatekeep.</p></div></div>
+      </div>
+    </div>
+    <div class="banner">Respect is not optional.</div>
+    <p class="note">No telemóvel as duas colunas passam a uma só (ou separadores “Standards / Conduct”).</p>
+  </div>
+</section>
+
+<!-- ============ 08 RECRUTAMENTO ============ -->
+<section id="recruit">
+  <span class="tag">08 · RECRUTAMENTO</span>
+  <div class="recruit-hero">
+    <div class="txt">
+      <p class="eyebrow">// D.A.G.R. Company is recruiting</p>
+      <h2 style="font-size:clamp(48px,7vw,92px)">No one<br>fights alone</h2>
+      <p class="lead">Assault, recon, support and medical — one company, four teams, all rotating together. Real structure. Real training. Real team you can count on.</p>
+      <div class="row">
+        <a class="btn pri" href="#apply">Apply in Discord</a>
+        <a class="btn ghost" href="#positions">Open positions</a>
+      </div>
+    </div>
+    <div class="ph dark"><span>no-one-fights-alone (foto sem texto)</span></div>
+  </div>
+
+  <div class="wrap" id="positions">
+    <p class="eyebrow">// Open now</p>
+    <h2>Open positions</h2>
+    <table class="tbl">
+      <thead><tr><th>Team</th><th>Element / role</th><th>Status</th><th>Selection</th></tr></thead>
+      <tbody>
+        <tr><td>Hitman</td><td>VANGUARD · DAGR 1 · lead SWEEP</td><td class="full">FULL</td><td>SWEEP</td></tr>
+        <tr><td>Hitman</td><td>BANDIT · DAGR 2 · lead KNIGHT</td><td class="open">OPEN: RM · GL</td><td>SWEEP</td></tr>
+        <tr><td>Hitman</td><td>COBRA · DAGR 3 · lead FRO$TY</td><td class="open">OPEN: TL ×2 · GL</td><td>SWEEP</td></tr>
+        <tr><td>Whiplash</td><td>FO · RCN · DEM · DRN · RAD</td><td class="open">OPEN: FO · DEM · DRN</td><td>STORM241</td></tr>
+        <tr><td>Anvil</td><td>Drones — Pilot · Pilot assistant</td><td class="open">OPEN · training offered</td><td>—</td></tr>
+        <tr><td>Anvil</td><td>Vehicles — VC · DRV · GNR</td><td class="open">OPEN · training offered</td><td>—</td></tr>
+        <tr><td>Prophet + Disciple</td><td>Medics · Rescue operators · co-leader</td><td class="open">OPEN</td><td>DEXTER</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Tabela editável num único ficheiro, para atualizarem as vagas sem mexer no resto do site. Confirma quem faz a seleção no Anvil.</p>
+
+    <div style="margin-top:56px">
+      <p class="eyebrow">// Join the company</p>
+      <h2>Earn your <span class="y">place.</span></h2>
+      <p class="lead">Nobody is handed a spot in D.A.G.R. You train for it, you earn it, and the whole company stands up when you do.</p>
+      <div class="grid g3 num3" style="margin-top:28px">
+        <div><div class="n">01</div><b class="caps">Apply</b><p class="muted" style="font-size:13px">Join the Discord and open an application. New players enter as Aspirants.</p></div>
+        <div><div class="n">02</div><b class="caps">Train</b><p class="muted" style="font-size:13px">1–3 weeks with two sponsors. Learn our comms, SOPs and your role.</p></div>
+        <div><div class="n">03</div><b class="caps">Graduate</b><p class="muted" style="font-size:13px">Earn your FNG tier and take your place in a team.</p></div>
+      </div>
+    </div>
+
+    <div class="req">18+ · Microphone required · PC preferred, console OK · 2–3 days a week</div>
+
+    <div class="cta-box" id="apply">
+      <div>
+        <p class="caps" style="margin:0;font-weight:700">Apply in Discord</p>
+        <p class="big" style="margin:6px 0">discord.gg/gJeGaH4au</p>
+        <p class="caps" style="margin:0;font-size:11px">Already a member? #role-selection</p>
+      </div>
+      <div class="qr">QR CODE<br>(gerado a partir<br>do link)</div>
+    </div>
+    <p class="note">Botão principal usa o link que me deste. Confirma se a linha “#role-selection” fica com outro link (discord.gg/ndabYXHFkb) ou sai.</p>
+  </div>
+</section>
+
+<!-- ============ 09 GALERIA ============ -->
+<section id="gallery">
+  <span class="tag">09 · GALERIA</span>
+  <div class="wrap">
+    <p class="eyebrow">// Field photos</p>
+    <h2>Gallery</h2>
+    <div class="gal" style="margin-top:28px">
+      <div class="ph w2 h2 dark"><span>banner-death-walks</span></div>
+      <div class="ph"><span>ruinas-equipa</span></div>
+      <div class="ph dark"><span>visao-noturna-cqb</span></div>
+      <div class="ph"><span>assalto-edificio</span></div>
+      <div class="ph dark"><span>floresta-nevoeiro</span></div>
+      <div class="ph w2"><span>equipa-mrap</span></div>
+      <div class="ph dark"><span>colina-crepusculo</span></div>
+      <div class="ph"><span>equipa-veiculo-pb</span></div>
+      <div class="ph dark"><span>trincheira-nevoeiro</span></div>
+      <div class="ph"><span>equipa-escudo-cidade</span></div>
+    </div>
+    <p class="note">Clicar numa foto abre-a em ecrã inteiro (setas para navegar). Fotos com cartaz/texto ficam fora da galeria.</p>
+  </div>
+</section>
+
+<!-- ============ 10 RODAPÉ ============ -->
+<footer class="foot">
+  <span class="tag" style="background:var(--yellow);color:var(--ink)">10 · RODAPÉ</span>
+  <div class="wrap">
+    <div>
+      <div class="brand" style="margin-bottom:16px"><div class="logo-ph">LOGO</div> D.A.G.R. COMPANY</div>
+      <div class="motto">Death walks<br>beside us</div>
+      <p class="caps" style="color:#bdb9ad;margin-top:12px">Смерть іде поруч з нами</p>
+    </div>
+    <div>
+      <p class="caps" style="color:var(--yellow)">// Navigate</p>
+      <p style="line-height:2">About<br>Teams<br>The Path<br>Standards<br>Recruitment<br>Gallery</p>
+    </div>
+    <div>
+      <p class="caps" style="color:var(--yellow)">// Join</p>
+      <p><a href="#apply">discord.gg/gJeGaH4au</a></p>
+      <p class="caps" style="color:#bdb9ad;font-size:11px">Arma Reforger milsim · Fan community, not affiliated with Bohemia Interactive.</p>
+    </div>
+  </div>
+  <div class="flag"></div>
+</footer>
+
+</div>
+</body>
+</html>
