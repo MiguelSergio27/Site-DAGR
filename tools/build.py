@@ -8,7 +8,7 @@ DISCORD_TXT = "discord.gg/gJeGaH4au"
 
 CUR = ' aria-current="page"'
 NAV = [("index.html", "Home"), ("about.html", "About"), ("teams.html", "Teams"),
-       ("handbook.html", "Handbook"), ("roster.html", "Roster"), ("recruitment.html", "Recruitment"), ("gallery.html", "Gallery")]
+       ("handbook.html", "Handbook"), ("recruitment.html", "Recruitment"), ("gallery.html", "Gallery")]
 
 
 def status_pill(status):
@@ -22,13 +22,13 @@ def squad_fact(unit, name):
     sq = dict(unit["squads"])[name]
     lead = next((x[1] for x in sq["groups"][0][1] if x[0] == "LEAD"), None)
     code = sq["code"].split(" // ")[0]
-    return (f'<li><span class="k">{name}</span><span>{code} · lead {lead or "open"} '
+    return (f'<li><span class="k">{name}</span><span>{code} · lead {lead or "open"}<br>'
             f'{status_pill(RS.status_of(RS.squad_open(sq)))}</span></li>')
 
 
 def group_fact(unit, title, label=None, text=None):
     slots = dict(unit["groups"])[title]
-    return (f'<li><span class="k">{label or title}</span><span>{text + " " if text else ""}'
+    return (f'<li><span class="k">{label or title}</span><span>{text + "<br>" if text else ""}'
             f'{status_pill(RS.status_of(RS.slots_open(slots)))}</span></li>')
 
 
@@ -331,7 +331,6 @@ teams = head("Teams — D.A.G.R. Company",
     <p class="eyebrow">// The teams</p>
     <h1>Four teams.<br><span class="y">One company.</span></h1>
     <p class="lead">Assault, recon, support and medical — all rotating together, with a second platoon in reserve. Find where you fit.</p>
-    <div class="btn-row"><a class="btn ghost" href="roster.html">See the full roster</a></div>
   </div>
 </section>
 
@@ -579,7 +578,6 @@ recruit = head("Recruitment — D.A.G.R. Company",
 {pos_rows()}
       </tbody>
     </table>
-    <p class="muted" style="margin-top:18px;font-size:13px">Full squad lists on the <a href="roster.html" class="y">company roster</a>.</p>
   </div>
 </section>
 
@@ -657,107 +655,6 @@ AVAILABILITY (with timezone):</pre>
 </section>
 """ + footer()
 
-# ------------------------------------------------------------------ ROSTER
-cmd_cards = "\n".join(
-    f'<div class="r-cmd{" top" if num == "07" else ""} reveal"><span class="num">{num}</span><div><h3>{name} <span class="tier t-L">★</span></h3>'
-    f'<p class="caps">{title}</p><p class="small">{desc}</p></div></div>'
-    for num, name, title, desc in RS.COMMAND)
-cadre = "".join(f'<p class="r-cadre reveal"><span class="caps muted">{t}</span> <b>{n}</b> <span class="caps muted">{u}</span></p>' for n, t, u in RS.CADRE)
-reserve = "".join(f'<li><span class="muted">{i:02d}</span> [ RESERVE ]</li>' for i in range(1, RS.RESERVE_SLOTS + 1))
-aspirants = "".join(f"<li>{a}</li>" for a in RS.ASPIRANTS)
-
-
-roster = head("Company Roster — D.A.G.R. Company",
-              "The full D.A.G.R. Company roster: command, HITMAN, WHIPLASH, ANVIL, PROPHET + DISCIPLE, BULWARK, reserve and aspirants.") + header("roster.html") + f"""
-<section class="page-hero">
-  <div class="bg"><img src="imagens/bunker-escudo.webp" alt=""></div>
-  <div class="container stagger">
-    <p class="eyebrow">// Last updated: {RS.UPDATED} · target strength {RS.TARGET} players</p>
-    <h1>Company<br><span class="y">roster</span></h1>
-    <p class="lead">Every unit, every slot. All units are under the full command of SWEEP (07).</p>
-    <div class="r-legend">
-      <span><span class="tier t-L">★</span> Leader</span><span><span class="tier t-V">◆</span> Veteran</span>
-      <span><span class="tier t-R">◇</span> Regular</span><span><span class="tier t-F">○</span> FNG</span>
-      <span><span class="slot-open">[ OPEN ]</span> Open slot</span>
-    </div>
-  </div>
-</section>
-
-<section class="section tight" id="command">
-  <div class="container">
-    <div class="section-head reveal"><p class="eyebrow">// Command</p><h2>Command</h2></div>
-    <div class="r-command">
-{cmd_cards}
-    </div>
-    {cadre}
-  </div>
-</section>
-
-<section class="section tight">
-  <div class="container">
-    {RS.platoon_html(RS.HITMAN)}
-    <div class="r-units">
-      {RS.unit_card(RS.WHIPLASH)}
-      {RS.unit_card(RS.ANVIL)}
-      {RS.unit_card(RS.PROPHET)}
-    </div>
-  </div>
-</section>
-
-<section class="section tight alt">
-  <div class="container r-split">
-    <div class="r-openbox reveal">
-      <div class="big"><span class="n">OPEN</span><span class="caps">Slots available</span></div>
-      <div>
-        <p>{UNIT_STATUS}</p>
-        <p class="muted">Interested? Message SWEEP or GROWBIGGER on Discord.</p>
-        <a class="btn" href="recruitment.html#positions" style="margin-top:14px">Open positions</a>
-      </div>
-    </div>
-    <div class="r-openbox reveal">
-      <div class="big"><span class="n">{RS.TARGET}</span><span class="caps">Target player base</span></div>
-      <div><p class="muted">Aiming for 70 to 90 players, with room to grow.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section tight">
-  <div class="container">
-    {RS.platoon_html(RS.BULWARK)}
-  </div>
-</section>
-
-<section class="section tight alt">
-  <div class="container r-split">
-    <div class="reveal">
-      <p class="eyebrow">// Reserve list</p>
-      <h2 style="font-size:clamp(36px,4.5vw,56px)">Reserve</h2>
-      <p class="muted" style="margin:10px 0 18px">Standby players. They feed the BULWARK platoon as slots open.</p>
-      <ol class="r-reserve">{reserve}</ol>
-    </div>
-    <div class="reveal">
-      <p class="eyebrow">// Aspirants</p>
-      <h2 style="font-size:clamp(36px,4.5vw,56px)">Aspirants</h2>
-      <p class="muted" style="margin:10px 0 18px">1–3 weeks · 2 sponsors required.</p>
-      <ul class="r-aspirants">{aspirants}</ul>
-    </div>
-  </div>
-</section>
-
-<section class="section tight" id="roles">
-  <div class="container">
-    <div class="section-head reveal">
-      <p class="eyebrow">// Role key</p>
-      <h2>Know the <span class="y">roles.</span></h2>
-      <p class="lead">New roles are marked in yellow.</p>
-    </div>
-    <div class="role-key">
-{role_key()}
-    </div>
-  </div>
-</section>
-""" + cta_band() + footer()
-
 # ------------------------------------------------------------------ GALLERY
 gal = [
     ("banner-death-walks.webp", "D.A.G.R. — Death walks beside us", "w2 h2"),
@@ -812,7 +709,7 @@ gallery = head("Gallery — D.A.G.R. Company",
 """ + cta_band() + footer()
 
 for name, html in [("index.html", home), ("about.html", about), ("teams.html", teams),
-                   ("handbook.html", handbook), ("roster.html", roster), ("recruitment.html", recruit), ("gallery.html", gallery)]:
+                   ("handbook.html", handbook), ("recruitment.html", recruit), ("gallery.html", gallery)]:
     with open(os.path.join(ROOT, name), "w") as f:
         f.write(html)
     print("wrote", name, len(html))

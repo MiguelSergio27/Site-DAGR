@@ -11,7 +11,6 @@ HTML + CSS + JS puros, sem build — basta abrir `index.html` no navegador.
 | `about.html` | Quem somos, fundador (SWEEP) e comando |
 | `teams.html` | HITMAN, WHIPLASH, ANVIL, PROPHET + DISCIPLE |
 | `handbook.html` | Standards, code of conduct e progressão (Aspirant → Leader) |
-| `roster.html` | Roster completo da companhia: comando, esquadras, reserva e aspirantes |
 | `recruitment.html` | Vagas abertas (com filtro), passos, requisitos e Discord |
 | `gallery.html` | Galeria com visualizador em ecrã inteiro |
 
@@ -31,7 +30,7 @@ vagas abertas, aspirantes, comando) estão todos em **`tools/roster.py`**.
 
 1. Edita `tools/roster.py` (ex: trocar `OPEN` pelo nome do jogador e a patente `L/V/R/F`).
 2. Corre `python3 tools/build.py`.
-3. O Roster, as vagas no Recruitment e as vagas no Teams ficam todos atualizados.
+3. O estado das vagas (Slots available / Full) no Recruitment e no Teams fica atualizado.
 
 Não edites os `.html` à mão — são reescritos pelo `build.py`.
 

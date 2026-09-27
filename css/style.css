@@ -560,80 +560,29 @@ h1 .y, h2 .y { background: linear-gradient(90deg, var(--yellow), var(--yellow-2)
 }
 
 /* =========================================================
-   ROSTER
+   RECRUTAMENTO: resumo e formato de resposta
    ========================================================= */
-.r-legend { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 26px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #cfcabc; }
-.r-legend > span { display: inline-flex; align-items: center; gap: 8px; }
-.tier { color: var(--yellow); font-size: 13px; line-height: 1; }
-.tier.t-R, .tier.t-F { color: #d9b21a; }
+.open-summary { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; border: 1px solid var(--line); border-top: 3px solid var(--yellow); background: var(--bg-2); padding: 26px; margin-bottom: 28px; }
+.open-summary .big { display: flex; flex-direction: column; }
+.open-summary .n { font-family: var(--display); font-size: clamp(64px, 8vw, 104px); line-height: .9; color: var(--yellow); }
+.open-summary p { margin: 0 0 6px; font-size: 14px; letter-spacing: .06em; }
 
-.r-command { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 18px; align-items: stretch; }
-.r-cmd { display: flex; gap: 18px; align-items: center; background: var(--bg-2); border: 1px solid var(--line); border-top: 3px solid var(--yellow); padding: 20px 22px; }
-.r-cmd.top { background: var(--bg-3); order: 0; transform: translateY(-10px); box-shadow: 0 14px 40px rgba(0,0,0,.4); }
-.r-cmd .num { font-family: var(--display); font-size: 58px; line-height: 1; color: var(--yellow); }
-.r-cmd h3 { font-size: 34px; display: flex; align-items: center; gap: 8px; }
-.r-cmd .caps { margin: 8px 0 0; color: #cfcabc; font-size: 11px; }
-.r-cmd .small { margin: 6px 0 0; font-size: 12px; color: var(--mute); }
-.r-cadre { margin: 18px 0 0; display: inline-flex; gap: 14px; align-items: center; border: 1px solid var(--line); padding: 10px 16px; background: var(--bg-2); }
-
-.r-platoon { margin-bottom: 36px; }
-.r-plhead { border: 1px solid var(--line); border-left: 4px solid var(--yellow); background: var(--bg-2); padding: 14px 18px; margin-bottom: 16px; }
-.r-plhead h3 { font-size: 40px; }
-.r-plhead p { margin: 4px 0 0; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
-.r-squads { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.r-units { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
-
-.r-card { background: #161614; border: 1px solid var(--line); transition: border-color .25s, transform .25s; }
-.r-card:hover { border-color: rgba(232,194,30,.6); transform: translateY(-3px); }
-.r-head { border-bottom: 3px solid var(--yellow); background: var(--bg-2); padding: 12px 16px; }
-.r-head h3 { font-size: 30px; }
-.r-head p { margin: 4px 0 0; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
-.grp { padding: 8px 16px; }
-.grp.boxed { margin: 8px 10px; border: 1px solid var(--line); padding: 8px 12px; background: var(--bg); }
-.grp-title { margin: 2px 0 6px; font-size: 10px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--yellow); }
-.grp ul { list-style: none; margin: 0; padding: 0; }
-.grp li { display: grid; grid-template-columns: 46px 1fr auto; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; border-bottom: 1px dashed rgba(255,255,255,.05); }
-.grp li:last-child { border-bottom: 0; }
-.slot-role { font-size: 10px; letter-spacing: .14em; color: var(--mute); }
-.slot-name { font-weight: 700; color: var(--text); word-break: break-word; }
-.slot-open { color: #7d7a70; letter-spacing: .06em; }
-.slot-reserved { color: #7d7a70; font-style: italic; }
-.slot-extra { color: var(--yellow); font-size: 12px; }
-.grp li:has(.slot-open) .slot-open { color: var(--yellow); opacity: .8; }
-
-.r-split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
-.r-openbox, .open-summary { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; border: 1px solid var(--line); border-top: 3px solid var(--yellow); background: var(--bg-2); padding: 26px; }
-.open-summary { margin-bottom: 28px; }
-.r-openbox .big, .open-summary .big { display: flex; flex-direction: column; }
-.r-openbox .n, .open-summary .n { font-family: var(--display); font-size: clamp(64px, 8vw, 104px); line-height: .9; color: var(--yellow); }
-.r-openbox p, .open-summary p { margin: 0 0 6px; font-size: 14px; letter-spacing: .06em; }
-
-.r-reserve { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
-.r-reserve li { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; color: #9d998d; display: flex; gap: 14px; }
-.r-aspirants { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 16px; }
-.r-aspirants li { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 700; word-break: break-word; }
-
-/* recrutamento: formato de resposta */
 .reply-box { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; border: 1px solid var(--line); border-left: 4px solid var(--blue-2); background: var(--bg-2); padding: 30px; margin-bottom: 32px; }
 .reply-box h3 { font-size: clamp(28px, 3vw, 38px); }
 .reply-format { margin: 0; background: #0c0c0b; border: 1px solid var(--line); padding: 20px 22px; font: 700 14px/2 var(--mono); letter-spacing: .08em; color: var(--text); white-space: pre-wrap; }
 .copy-btn.light { margin-top: 20px; color: var(--text); border-color: var(--text); }
 .copy-btn.light:hover { background: var(--yellow); border-color: var(--yellow); color: var(--bg); }
 
+/* estado da vaga sempre numa linha própria, por baixo do texto */
+.facts .pill { margin-top: 8px; }
+
 @media (min-width: 901px) and (max-width: 1180px) {
   .nav-links { gap: 16px; }
   .nav-links a { font-size: 11px; letter-spacing: .12em; }
 }
-@media (max-width: 1080px) {
-  .r-squads, .r-units { grid-template-columns: repeat(2, 1fr); }
-  .r-command { grid-template-columns: 1fr; }
-  .r-cmd.top { transform: none; order: -1; }
-}
 @media (max-width: 900px) {
-  .r-split, .reply-box { grid-template-columns: 1fr; }
-  .r-aspirants { grid-template-columns: 1fr 1fr; }
+  .reply-box { grid-template-columns: 1fr; }
 }
 @media (max-width: 620px) {
-  .r-squads, .r-units { grid-template-columns: 1fr; }
-  .r-openbox, .open-summary { grid-template-columns: 1fr; gap: 12px; }
+  .open-summary { grid-template-columns: 1fr; gap: 12px; }
 }
