@@ -6,12 +6,13 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- vídeo de abertura (só na home, uma vez por sessão) ---------- */
+  /* ---------- vídeo de abertura (na home, sempre que se entra no site) ---------- */
   var intro = document.querySelector(".intro");
   if (intro) {
-    var seen = false;
-    try { seen = sessionStorage.getItem("dagr-intro") === "1"; } catch (e) {}
-    if (seen || reduceMotion) {
+    // não repete quando se volta à Home a partir de outra página do próprio site
+    var internal = false;
+    try { internal = !!document.referrer && new URL(document.referrer).host === location.host && location.host !== ""; } catch (e) {}
+    if (internal) {
       intro.remove();
     } else {
       var video = intro.querySelector("video");
@@ -22,8 +23,14 @@
         if (intro.classList.contains("done")) return;
         intro.classList.add("done");
         document.body.style.overflow = "";
-        try { sessionStorage.setItem("dagr-intro", "1"); } catch (e) {}
         setTimeout(function () { intro.remove(); }, 800);
+      };
+
+      // se o vídeo não puder tocar, mostra a animação do escudo em alternativa
+      var fallback = function () {
+        if (intro.classList.contains("fallback") || intro.classList.contains("done")) return;
+        intro.classList.add("fallback");
+        setTimeout(closeIntro, 3600);
       };
 
       // escolhe a versão do vídeo conforme o ecrã e o formato suportado (MP4/H.264, senão WebM/VP9)
@@ -34,12 +41,12 @@
         if (video.duration) bar.style.transform = "scaleX(" + (video.currentTime / video.duration) + ")";
       });
       video.addEventListener("ended", closeIntro);
-      video.addEventListener("error", closeIntro);
+      video.addEventListener("error", fallback);
 
       var playing = video.play();
       if (playing && playing.catch) {
-        // autoplay bloqueado (ex: modo poupança de energia): mostra o poster um instante e segue
-        playing.catch(function () { setTimeout(closeIntro, 1200); });
+        // autoplay bloqueado (ex: modo poupança de energia) -> animação do escudo
+        playing.catch(fallback);
       }
 
       intro.querySelector(".intro-skip").addEventListener("click", closeIntro);

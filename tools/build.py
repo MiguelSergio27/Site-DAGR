@@ -181,6 +181,12 @@ home = head("D.A.G.R. Company — Arma Reforger Milsim",
             "D.A.G.R. — Direct Assault Ground Ranger Company. An Arma Reforger milsim unit. Death walks beside us.") + """
 <div class="intro" aria-hidden="true">
   <video class="intro-video" muted playsinline preload="auto" poster="video/intro-poster.webp"></video>
+  <div class="intro-alt">
+    <img src="imagens/logo-escudo.png" alt="">
+    <div class="t"><span>D.A.G.R. Company</span></div>
+    <div class="bar"></div>
+    <div class="m">Death walks beside us</div>
+  </div>
   <div class="intro-bar"><span></span></div>
   <button class="intro-skip" type="button">Skip intro ›</button>
 </div>

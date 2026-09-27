@@ -387,6 +387,19 @@ blockquote.quote cite { display: block; margin-top: 12px; font: 12px var(--mono)
 .intro-skip:hover { background: var(--yellow); color: var(--bg); border-color: var(--yellow); }
 @keyframes introFade { to { opacity: 1; } }
 
+/* alternativa ao vídeo (se o navegador bloquear): animação do escudo */
+.intro-alt { display: none; position: absolute; inset: 0; background: #0a0a09; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+.intro.fallback .intro-alt { display: flex; }
+.intro.fallback .intro-video, .intro.fallback .intro-bar { display: none; }
+.intro-alt img { width: min(34vw, 170px); opacity: 0; transform: scale(.85); animation: introLogo 1s .2s ease forwards; }
+.intro-alt .t { font-family: var(--display); font-size: clamp(40px, 8vw, 88px); text-transform: uppercase; letter-spacing: .06em; line-height: 1; overflow: hidden; text-align: center; }
+.intro-alt .t span { display: inline-block; transform: translateY(110%); animation: introUp .7s 1s cubic-bezier(.2,.8,.2,1) forwards; }
+.intro-alt .m { font-size: 12px; letter-spacing: .5em; text-transform: uppercase; color: var(--yellow); opacity: 0; animation: introFade .8s 1.6s forwards; text-align: center; }
+.intro-alt .bar { width: min(60vw, 320px); height: 4px; background: linear-gradient(90deg, var(--blue) 50%, var(--yellow) 50%); transform: scaleX(0); animation: introBar 1.2s 1.1s ease forwards; }
+@keyframes introLogo { to { opacity: 1; transform: none; } }
+@keyframes introUp { to { transform: none; } }
+@keyframes introBar { to { transform: scaleX(1); } }
+
 /* ---------- legenda das funções (role key) ---------- */
 .role-key { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .role-key .role { display: flex; align-items: baseline; gap: 14px; padding: 14px 16px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: 13px; transition: background .2s; }
@@ -403,7 +416,6 @@ blockquote.quote cite { display: block; margin-top: 12px; font: 12px var(--mono)
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .js .reveal { opacity: 1; transform: none; }
-  .intro { display: none; }
 }
 
 /* ---------- responsivo ---------- */
