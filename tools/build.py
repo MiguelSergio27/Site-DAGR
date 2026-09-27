@@ -11,22 +11,25 @@ NAV = [("index.html", "Home"), ("about.html", "About"), ("teams.html", "Teams"),
        ("handbook.html", "Handbook"), ("roster.html", "Roster"), ("recruitment.html", "Recruitment"), ("gallery.html", "Gallery")]
 
 
-def pills(roles):
-    return "".join(f'<span class="pill open">{r}</span>' for r in roles) or '<span class="pill full">Full</span>'
+def status_pill(status):
+    """Só mostra se ainda há vagas ou se está cheio (sem listar funções)."""
+    if status == "open":
+        return '<span class="pill open">Slots available</span>'
+    return '<span class="pill full">Full</span>'
 
 
 def squad_fact(unit, name):
     sq = dict(unit["squads"])[name]
     lead = next((x[1] for x in sq["groups"][0][1] if x[0] == "LEAD"), None)
-    roles = RS.merge(sum((RS.open_roles(sl) for _, sl in sq["groups"]), []))
     code = sq["code"].split(" // ")[0]
-    return f'<li><span class="k">{name}</span><span>{code} · lead {lead or "open"}<br>{pills(roles)}</span></li>'
+    return (f'<li><span class="k">{name}</span><span>{code} · lead {lead or "open"} '
+            f'{status_pill(RS.status_of(RS.squad_open(sq)))}</span></li>')
 
 
-def group_fact(unit, title, label=None):
+def group_fact(unit, title, label=None, text=None):
     slots = dict(unit["groups"])[title]
-    names = " · ".join(f"{x[0]} {x[1]}" for x in slots if x[1] not in (None, "RESERVED"))
-    return f'<li><span class="k">{label or title}</span><span>{names}<br>{pills(RS.open_roles(slots))}</span></li>'
+    return (f'<li><span class="k">{label or title}</span><span>{text + " " if text else ""}'
+            f'{status_pill(RS.status_of(RS.slots_open(slots)))}</span></li>')
 
 
 
@@ -357,7 +360,7 @@ teams = head("Teams — D.A.G.R. Company",
       <p class="tagline">Small team.<br><span class="y">Big responsibilities.</span></p>
       <ul class="facts">
         <li><span class="k">Size</span><span>Small by design. By selection only.</span></li>
-        {group_fact(RS.WHIPLASH, None, "Team")}
+        {group_fact(RS.WHIPLASH, None, "Status")}
         <li><span class="k">Selection</span><span>STORM241 chooses who joins.</span></li>
       </ul>
     </div>
@@ -371,10 +374,10 @@ teams = head("Teams — D.A.G.R. Company",
       <p class="tagline">Eyes in the sky. Drive it. Gun it.<br><span class="y">We train you.</span></p>
       <ul class="facts">
         <li><span class="k">Mission</span><span>Vehicles, firepower (artillery, drones) and logistics.</span></li>
-        {group_fact(RS.ANVIL, None, "HQ")}
-        {group_fact(RS.ANVIL, "Vehicle crew")}
-        {group_fact(RS.ANVIL, "Artillery")}
-        {group_fact(RS.ANVIL, "Drones")}
+        {group_fact(RS.ANVIL, None, "HQ", "Led by CAINFPS · radio &amp; comms.")}
+        {group_fact(RS.ANVIL, "Vehicle crew", None, "Commander · driver · gunner.")}
+        {group_fact(RS.ANVIL, "Artillery", None, "Fire support.")}
+        {group_fact(RS.ANVIL, "Drones", None, "Fly recon &amp; strike drones.")}
         <li><span class="k">Selection</span><span>CAINFPS · team-oriented players with strong, concise comms. Training offered.</span></li>
       </ul>
     </div>
@@ -389,7 +392,9 @@ teams = head("Teams — D.A.G.R. Company",
       <ul class="facts">
         <li><span class="k">Prophet</span><span>Medical platoon.</span></li>
         <li><span class="k">Disciple</span><span>Combat search &amp; rescue.</span></li>
-        {group_fact(RS.PROPHET, None, "Team")}
+        <li><span class="k">We want</span><span>Medics · rescue operators</span></li>
+        <li><span class="k">Lead</span><span>Co-led by DEXTER — seeking a co-leader.</span></li>
+        <li><span class="k">Status</span><span>{status_pill(RS.status_of(RS.open_count(RS.PROPHET)))}</span></li>
       </ul>
     </div>
   </article>
@@ -501,8 +506,9 @@ handbook = head("Member Handbook — D.A.G.R. Company",
 
 # ------------------------------------------------------------------ RECRUITMENT
 positions = RS.positions()
-OPEN_ACTIVE = sum(RS.open_count(u) for u in RS.ACTIVE_UNITS)
-OPEN_BULWARK = RS.open_count(RS.BULWARK)
+UNIT_STATUS = " · ".join(
+    f"{u['name'].upper()} <b class='{'y' if RS.open_count(u) else 'muted'}'>{'OPEN' if RS.open_count(u) else 'FULL'}</b>"
+    for u in RS.ALL_UNITS)
 
 
 def role_key():
@@ -511,12 +517,12 @@ def role_key():
 
 def pos_rows():
     out = []
-    for team, status, name, el, sub, roles, sel in positions:
-        pills = "".join(f'<span class="pill open">{r}</span>' for r in roles) if roles else '<span class="pill full">Full</span>'
+    for team, status, name, el, sub, sel in positions:
+        pills = status_pill(status)
         out.append(f"""        <tr data-team="{team}" data-status="{status}">
           <td class="team" data-label="Team">{name}</td>
           <td data-label="Element">{el}<span class="sub">{sub}</span></td>
-          <td data-label="Open">{pills}</td>
+          <td data-label="Status">{pills}</td>
           <td data-label="Selection">{sel}</td>
         </tr>""")
     return "\n".join(out)
@@ -548,15 +554,14 @@ recruit = head("Recruitment — D.A.G.R. Company",
 <section class="section" id="positions">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">// Open now · updated {RS.UPDATED}</p>
+      <p class="eyebrow">// Open now</p>
       <h2>Open positions</h2>
     </div>
     <div class="open-summary reveal">
-      <div class="big"><span class="n" data-count="{OPEN_ACTIVE}">{OPEN_ACTIVE}</span><span class="caps">Slots open</span></div>
+      <div class="big"><span class="n">{RS.TARGET}</span><span class="caps">Target player base</span></div>
       <div>
-        <p>{" · ".join(f"{u['name'].upper()} <b class='y'>{RS.open_count(u)}</b>" for u in RS.ACTIVE_UNITS)}</p>
-        <p>+ BULWARK reserve platoon <b class="y">{OPEN_BULWARK}</b> · target strength {RS.TARGET} players</p>
-        <p class="muted">Interested? Message SWEEP or GROWBIGGER on Discord.</p>
+        <p>{UNIT_STATUS}</p>
+        <p class="muted">Slots are still open. Interested? Message SWEEP or GROWBIGGER on Discord.</p>
       </div>
     </div>
     <div class="filters" role="group" aria-label="Filter positions">
@@ -569,7 +574,7 @@ recruit = head("Recruitment — D.A.G.R. Company",
       <button data-filter="bulwark" aria-pressed="false">Bulwark</button>
     </div>
     <table class="positions">
-      <thead><tr><th>Team</th><th>Element</th><th>Open</th><th>Selection</th></tr></thead>
+      <thead><tr><th>Team</th><th>Element</th><th>Status</th><th>Selection</th></tr></thead>
       <tbody>
 {pos_rows()}
       </tbody>
@@ -660,7 +665,7 @@ cmd_cards = "\n".join(
 cadre = "".join(f'<p class="r-cadre reveal"><span class="caps muted">{t}</span> <b>{n}</b> <span class="caps muted">{u}</span></p>' for n, t, u in RS.CADRE)
 reserve = "".join(f'<li><span class="muted">{i:02d}</span> [ RESERVE ]</li>' for i in range(1, RS.RESERVE_SLOTS + 1))
 aspirants = "".join(f"<li>{a}</li>" for a in RS.ASPIRANTS)
-summary = " · ".join(f"{u['name'].upper()} <b class='y'>{RS.open_count(u)}</b>" for u in RS.ACTIVE_UNITS)
+
 
 roster = head("Company Roster — D.A.G.R. Company",
               "The full D.A.G.R. Company roster: command, HITMAN, WHIPLASH, ANVIL, PROPHET + DISCIPLE, BULWARK, reserve and aspirants.") + header("roster.html") + f"""
@@ -702,10 +707,9 @@ roster = head("Company Roster — D.A.G.R. Company",
 <section class="section tight alt">
   <div class="container r-split">
     <div class="r-openbox reveal">
-      <div class="big"><span class="n" data-count="{OPEN_ACTIVE}">{OPEN_ACTIVE}</span><span class="caps">Slots open</span></div>
+      <div class="big"><span class="n">OPEN</span><span class="caps">Slots available</span></div>
       <div>
-        <p>{summary}</p>
-        <p>BULWARK <b class="y">{OPEN_BULWARK}</b></p>
+        <p>{UNIT_STATUS}</p>
         <p class="muted">Interested? Message SWEEP or GROWBIGGER on Discord.</p>
         <a class="btn" href="recruitment.html#positions" style="margin-top:14px">Open positions</a>
       </div>

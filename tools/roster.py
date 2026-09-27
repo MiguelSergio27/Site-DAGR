@@ -89,9 +89,11 @@ ANVIL = {
 }
 
 PROPHET = {
-    "id": "prophet", "name": "Prophet + Disciple", "sub": "Medical + Rescue",
+    "id": "prophet", "name": "Prophet + Disciple", "sub": "Medical + Combat Search &amp; Rescue",
     "groups": [
-        (None, [("LDR", "DEXTER", None), ("RTO", OPEN, None), ("MED", "RAMBO", None), ("CSAR", OPEN, None)]),
+        (None, [("LDR", "DEXTER", None), ("CO-LDR", OPEN, None), ("RTO", OPEN, None)]),
+        ("Prophet · Medical platoon", [("MED", "RAMBO", None), ("MED", OPEN, None)]),
+        ("Disciple · Combat search &amp; rescue", [("CSAR", OPEN, None)]),
     ],
 }
 
@@ -211,26 +213,51 @@ def role_key_html():
     return "\n".join(out)
 
 
+SELECTION = {"hitman": "SWEEP", "whiplash": "STORM241", "anvil": "CAINFPS", "prophet": "DEXTER", "bulwark": "SWEEP"}
+
+# texto fixo de cada elemento na tabela de vagas (não muda quando entra/sai alguém)
+ELEMENT_INFO = {
+    ("anvil", None): ("HQ", "Leadership &amp; comms"),
+    ("anvil", "Vehicle crew"): ("Vehicle crew", "Commander · driver · gunner — training offered"),
+    ("anvil", "Artillery"): ("Artillery", "Fire support — training offered"),
+    ("anvil", "Drones"): ("Drones", "Fly recon &amp; strike drones — training offered"),
+    ("whiplash", None): ("Recon // Sabotage", "Small team · by selection only"),
+    ("prophet", None): ("Medical + CSAR", "Medics · rescue operators · seeking co-leader — co-led by DEXTER"),
+}
+
+
+def status_of(n_open):
+    """'open' se ainda há vagas, 'full' se está cheio."""
+    return "open" if n_open else "full"
+
+
+def slots_open(slots):
+    return sum((1 if s[1] is None else 0) + (s[3] if len(s) > 3 else 0) for s in slots)
+
+
+def squad_open(sq):
+    return sum(slots_open(sl) for _, sl in sq["groups"])
+
+
 def positions():
-    """Linhas da tabela de vagas: (team_id, status, equipa, elemento, detalhe, [roles], seleção)."""
+    """Linhas da tabela de vagas: (team_id, status, equipa, elemento, detalhe, seleção).
+    Só diz se há vagas ('open') ou se está cheio ('full') — sem listar funções."""
     rows = []
-    sel = {"hitman": "SWEEP", "whiplash": "STORM241", "anvil": "CAINFPS", "prophet": "DEXTER", "bulwark": "SWEEP"}
     for unit in ALL_UNITS:
+        uid = unit["id"]
         if "squads" in unit:
             for sq_name, sq in unit["squads"]:
-                roles = []
-                for _, slots in sq["groups"]:
-                    roles += open_roles(slots)
-                roles = merge(roles)
+                code = sq["code"].split(" // ")[0]
                 lead = next((s[1] for s in sq["groups"][0][1] if s[0] == "LEAD"), None)
-                detail = f"{sq['code'].split(' // ')[0]} · lead {lead}" if lead else f"{sq['code'].split(' // ')[0]} · reserve squad — lead open"
-                rows.append((unit["id"], "open" if roles else "full", unit["name"], sq_name.upper(), detail, roles, sel[unit["id"]]))
-        else:
+                detail = f"{code} · lead {lead}" if lead else f"{code} · reserve squad"
+                rows.append((uid, status_of(squad_open(sq)), unit["name"], sq_name.upper(), detail, SELECTION[uid]))
+        elif uid == "anvil":
             for title, slots in unit["groups"]:
-                roles = open_roles(slots)
-                el = title or ("HQ" if len(unit["groups"]) > 1 else unit["sub"].split(" · ")[0])
-                names = ", ".join(f"{s[0]} {s[1]}" for s in slots if s[1] not in (None, "RESERVED"))
-                rows.append((unit["id"], "open" if roles else "full", unit["name"], el, names, roles, sel[unit["id"]]))
+                el, detail = ELEMENT_INFO[(uid, title)]
+                rows.append((uid, status_of(slots_open(slots)), unit["name"], el, detail, SELECTION[uid]))
+        else:
+            el, detail = ELEMENT_INFO[(uid, None)]
+            rows.append((uid, status_of(open_count(unit)), unit["name"], el, detail, SELECTION[uid]))
     return rows
 
 
