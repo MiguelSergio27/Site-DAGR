@@ -137,7 +137,7 @@ TEAMS_CARDS = """
           <p class="caps role">SSO Assault Force</p>
           <h3>Hitman</h3>
           <p class="motto">First through the door.</p>
-          <p>Three squads — VANGUARD, BANDIT and COBRA — two fireteams each.</p>
+          <p>Three squads — VANGUARD (rifle), BANDIT (weapons) and COBRA (combat engineers).</p>
           <span class="more">Meet Hitman</span>
         </div>
       </a>
@@ -348,7 +348,7 @@ teams = head("Teams — D.A.G.R. Company",
       <h2>Hitman</h2>
       <p class="tagline">First through the door.<br><span class="y">The tip of the spear.</span></p>
       <ul class="facts">
-        <li><span class="k">Structure</span><span>Three squads, one assault force. Each squad runs an ALPHA and a BRAVO fireteam.</span></li>
+        <li><span class="k">Structure</span><span>Three squads, one assault force, each with its own job.</span></li>
         {squad_fact(RS.HITMAN, "Vanguard")}
         {squad_fact(RS.HITMAN, "Bandit")}
         {squad_fact(RS.HITMAN, "Cobra")}
@@ -500,7 +500,7 @@ handbook = head("Member Handbook — D.A.G.R. Company",
       <h2>The teams</h2>
     </div>
     <div class="reveal">
-      <div class="rule" style="grid-template-columns:minmax(200px,1fr) 2fr"><h3 style="font-size:36px">Hitman</h3><p>SSO assault force. VANGUARD, BANDIT and COBRA, two fireteams each.</p></div>
+      <div class="rule" style="grid-template-columns:minmax(200px,1fr) 2fr"><h3 style="font-size:36px">Hitman</h3><p>SSO assault force. VANGUARD (Hitman 1, rifle squad), BANDIT (Hitman 2, weapons team) and COBRA (Hitman 3, combat engineers).</p></div>
       <div class="rule" style="grid-template-columns:minmax(200px,1fr) 2fr"><h3 style="font-size:36px">Whiplash</h3><p>SSO recon and sabotage. Small team, selected by STORM241.</p></div>
       <div class="rule" style="grid-template-columns:minmax(200px,1fr) 2fr"><h3 style="font-size:36px">Anvil</h3><p>Support and logistics. Vehicles, firepower (artillery, drones) and logistics. Led by CAINFPS.</p></div>
       <div class="rule" style="grid-template-columns:minmax(200px,1fr) 2fr"><h3 style="font-size:36px">Prophet + Disciple</h3><p>Medical platoon plus combat search and rescue. Co-led by DEXTER.</p></div>

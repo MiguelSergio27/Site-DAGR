@@ -216,9 +216,9 @@ def role_key_html():
 # função de cada esquadra (aparece no site em vez do código DAGR e do nome do SL,
 # que podem mudar). Troca o texto quando souberes a função certa de cada uma.
 SQUAD_ROLE = {
-    "Vanguard": "Assault squad",
-    "Bandit": "Assault squad",
-    "Cobra": "Assault squad",
+    "Vanguard": "Hitman 1 · Rifle squad",
+    "Bandit": "Hitman 2 · Weapons team",
+    "Cobra": "Hitman 3 · Combat engineers",
     "Bastion": "Reserve squad",
     "Rampart": "Reserve squad",
     "Citadel": "Reserve squad",
