@@ -11,25 +11,25 @@ NAV = [("index.html", "Home"), ("about.html", "About"), ("teams.html", "Teams"),
        ("handbook.html", "Handbook"), ("recruitment.html", "Recruitment"), ("gallery.html", "Gallery")]
 
 
-def status_pill(status):
-    """Só mostra se ainda há vagas ou se está cheio (sem listar funções)."""
-    if status == "open":
-        return '<span class="pill open">Slots available</span>'
-    return '<span class="pill full">Full</span>'
+# roster ao vivo (mantido pelo comando) — as vagas abertas/cheias vêem-se lá
+LIVE_ROSTER = "https://sweep-cmd.github.io/D.A.G.R.-COMPANY/"
+
+
+def live_btn(label="Check live slots"):
+    return (f'<a class="btn ghost live-btn" href="{LIVE_ROSTER}" target="_blank" rel="noopener">'
+            f'<span class="live-dot" aria-hidden="true"></span>{label} ↗</a>')
 
 
 def squad_fact(unit, name):
     sq = dict(unit["squads"])[name]
     lead = next((x[1] for x in sq["groups"][0][1] if x[0] == "LEAD"), None)
     code = sq["code"].split(" // ")[0]
-    return (f'<li><span class="k">{name}</span><span>{code} · lead {lead or "open"}<br>'
-            f'{status_pill(RS.status_of(RS.squad_open(sq)))}</span></li>')
+    return f'<li><span class="k">{name}</span><span>{code} · lead {lead or "open"}</span></li>'
 
 
 def group_fact(unit, title, label=None, text=None):
     slots = dict(unit["groups"])[title]
-    return (f'<li><span class="k">{label or title}</span><span>{text + "<br>" if text else ""}'
-            f'{status_pill(RS.status_of(RS.slots_open(slots)))}</span></li>')
+    return f'<li><span class="k">{label or title}</span><span>{text or ""}</span></li>'
 
 
 
@@ -101,6 +101,7 @@ def footer():
       <ul>
         <li><a href="{DISCORD}" target="_blank" rel="noopener">{DISCORD_TXT}</a></li>
         <li><a href="recruitment.html#positions">Open positions</a></li>
+        <li><a href="{LIVE_ROSTER}" target="_blank" rel="noopener">Live roster ↗</a></li>
         <li><a href="handbook.html">Member handbook</a></li>
       </ul>
     </div>
@@ -259,7 +260,7 @@ home = head("D.A.G.R. Company — Arma Reforger Milsim",
       <h2>Earn your <span class="y">place.</span></h2>
       <p class="lead">Nobody is handed a spot in D.A.G.R. You train for it, you earn it, and the whole company stands up when you do.</p>
       <div class="btn-row">
-        <a class="btn" href="recruitment.html">See open positions</a>
+        <a class="btn" href="recruitment.html">Find your team</a>
         <a class="btn ghost" href="handbook.html">Read the handbook</a>
       </div>
     </div>
@@ -337,6 +338,8 @@ teams = head("Teams — D.A.G.R. Company",
     <p class="eyebrow">// The teams</p>
     <h1>Four teams.<br><span class="y">One company.</span></h1>
     <p class="lead">Assault, recon, support and medical — all rotating together, with a second platoon in reserve. Find where you fit.</p>
+    <p class="lead" style="margin-top:12px">Slots change every week — the live company roster always shows who is in each squad and what is open.</p>
+    <div class="btn-row">{live_btn("Live company roster")}</div>
   </div>
 </section>
 
@@ -354,6 +357,7 @@ teams = head("Teams — D.A.G.R. Company",
         {squad_fact(RS.HITMAN, "Cobra")}
         <li><span class="k">Selection</span><span>SWEEP</span></li>
       </ul>
+      <div class="btn-row" style="margin-top:22px">{live_btn()}</div>
     </div>
   </article>
 
@@ -365,9 +369,9 @@ teams = head("Teams — D.A.G.R. Company",
       <p class="tagline">Small team.<br><span class="y">Big responsibilities.</span></p>
       <ul class="facts">
         <li><span class="k">Size</span><span>Small by design. By selection only.</span></li>
-        {group_fact(RS.WHIPLASH, None, "Status")}
         <li><span class="k">Selection</span><span>STORM241 chooses who joins.</span></li>
       </ul>
+      <div class="btn-row" style="margin-top:22px">{live_btn()}</div>
     </div>
   </article>
 
@@ -385,6 +389,7 @@ teams = head("Teams — D.A.G.R. Company",
         {group_fact(RS.ANVIL, "Drones", None, "Fly recon &amp; strike drones.")}
         <li><span class="k">Selection</span><span>CAINFPS · team-oriented players with strong, concise comms. Training offered.</span></li>
       </ul>
+      <div class="btn-row" style="margin-top:22px">{live_btn()}</div>
     </div>
   </article>
 
@@ -399,8 +404,8 @@ teams = head("Teams — D.A.G.R. Company",
         <li><span class="k">Disciple</span><span>Combat search &amp; rescue.</span></li>
         <li><span class="k">We want</span><span>Medics · rescue operators</span></li>
         <li><span class="k">Lead</span><span>Co-led by DEXTER — seeking a co-leader.</span></li>
-        <li><span class="k">Status</span><span>{status_pill(RS.status_of(RS.open_count(RS.PROPHET)))}</span></li>
       </ul>
+      <div class="btn-row" style="margin-top:22px">{live_btn()}</div>
     </div>
   </article>
 
@@ -417,6 +422,7 @@ teams = head("Teams — D.A.G.R. Company",
         {squad_fact(RS.BULWARK, "Citadel")}
         <li><span class="k">Reserve</span><span>Standby players on the reserve list feed BULWARK as slots open.</span></li>
       </ul>
+      <div class="btn-row" style="margin-top:22px">{live_btn()}</div>
     </div>
   </article>
 </div>
@@ -511,9 +517,6 @@ handbook = head("Member Handbook — D.A.G.R. Company",
 
 # ------------------------------------------------------------------ RECRUITMENT
 positions = RS.positions()
-UNIT_STATUS = " · ".join(
-    f"{u['name'].upper()} <b class='{'y' if RS.open_count(u) else 'muted'}'>{'OPEN' if RS.open_count(u) else 'FULL'}</b>"
-    for u in RS.ALL_UNITS)
 
 
 def role_key():
@@ -523,11 +526,9 @@ def role_key():
 def pos_rows():
     out = []
     for team, status, name, el, sub, sel in positions:
-        pills = status_pill(status)
-        out.append(f"""        <tr data-team="{team}" data-status="{status}">
+        out.append(f"""        <tr data-team="{team}">
           <td class="team" data-label="Team">{name}</td>
           <td data-label="Element">{el}<span class="sub">{sub}</span></td>
-          <td data-label="Status">{pills}</td>
           <td data-label="Selection">{sel}</td>
         </tr>""")
     return "\n".join(out)
@@ -544,7 +545,7 @@ recruit = head("Recruitment — D.A.G.R. Company",
     <p class="lead">Assault, recon, support and medical — one company, four teams, all rotating together. Real structure. Real training. Real team you can count on.</p>
     <div class="btn-row">
       <a class="btn" href="#apply">Apply in Discord</a>
-      <a class="btn ghost" href="#positions">Open positions</a>
+      <a class="btn ghost" href="#positions">Find your team</a>
     </div>
   </div>
 </section>
@@ -559,19 +560,19 @@ recruit = head("Recruitment — D.A.G.R. Company",
 <section class="section" id="positions">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">// Open now</p>
-      <h2>Open positions</h2>
+      <p class="eyebrow">// Teams &amp; selection</p>
+      <h2>Find your team</h2>
     </div>
     <div class="open-summary reveal">
       <div class="big"><span class="n">{RS.TARGET}</span><span class="caps">Target player base</span></div>
       <div>
-        <p>{UNIT_STATUS}</p>
-        <p class="muted">Slots are still open. Interested? Message SWEEP or GROWBIGGER on Discord.</p>
+        <p>Which slots are open or full changes every week. The live company roster always shows who is in each squad and what is still open.</p>
+        <p class="muted">Interested? Message SWEEP or GROWBIGGER on Discord.</p>
+        <div class="btn-row" style="margin-top:16px">{live_btn("Check live slots")}</div>
       </div>
     </div>
     <div class="filters" role="group" aria-label="Filter positions">
       <button data-filter="all" aria-pressed="true">All</button>
-      <button data-filter="open" aria-pressed="false">Open only</button>
       <button data-filter="hitman" aria-pressed="false">Hitman</button>
       <button data-filter="whiplash" aria-pressed="false">Whiplash</button>
       <button data-filter="anvil" aria-pressed="false">Anvil</button>
@@ -579,7 +580,7 @@ recruit = head("Recruitment — D.A.G.R. Company",
       <button data-filter="bulwark" aria-pressed="false">Bulwark</button>
     </div>
     <table class="positions">
-      <thead><tr><th>Team</th><th>Element</th><th>Status</th><th>Selection</th></tr></thead>
+      <thead><tr><th>Team</th><th>Element</th><th>Selection</th></tr></thead>
       <tbody>
 {pos_rows()}
       </tbody>
