@@ -213,6 +213,17 @@ def role_key_html():
     return "\n".join(out)
 
 
+# função de cada esquadra (aparece no site em vez do código DAGR e do nome do SL,
+# que podem mudar). Troca o texto quando souberes a função certa de cada uma.
+SQUAD_ROLE = {
+    "Vanguard": "Assault squad",
+    "Bandit": "Assault squad",
+    "Cobra": "Assault squad",
+    "Bastion": "Reserve squad",
+    "Rampart": "Reserve squad",
+    "Citadel": "Reserve squad",
+}
+
 SELECTION = {"hitman": "SWEEP", "whiplash": "STORM241", "anvil": "CAINFPS", "prophet": "DEXTER", "bulwark": "SWEEP"}
 
 # texto fixo de cada elemento na tabela de vagas (não muda quando entra/sai alguém)
@@ -247,9 +258,7 @@ def positions():
         uid = unit["id"]
         if "squads" in unit:
             for sq_name, sq in unit["squads"]:
-                code = sq["code"].split(" // ")[0]
-                lead = next((s[1] for s in sq["groups"][0][1] if s[0] == "LEAD"), None)
-                detail = f"{code} · lead {lead}" if lead else f"{code} · reserve squad"
+                detail = SQUAD_ROLE[sq_name]
                 rows.append((uid, status_of(squad_open(sq)), unit["name"], sq_name.upper(), detail, SELECTION[uid]))
         elif uid == "anvil":
             for title, slots in unit["groups"]:

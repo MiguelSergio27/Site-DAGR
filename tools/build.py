@@ -21,10 +21,7 @@ def live_btn(label="Check live slots"):
 
 
 def squad_fact(unit, name):
-    sq = dict(unit["squads"])[name]
-    lead = next((x[1] for x in sq["groups"][0][1] if x[0] == "LEAD"), None)
-    code = sq["code"].split(" // ")[0]
-    return f'<li><span class="k">{name}</span><span>{code} · lead {lead or "open"}</span></li>'
+    return f'<li><span class="k">{name}</span><span>{RS.SQUAD_ROLE[name]}</span></li>'
 
 
 def group_fact(unit, title, label=None, text=None):
